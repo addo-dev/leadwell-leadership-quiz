@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Leadership Superpower!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&family=IBM+Plex+Serif:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #002D40; /* Fallback color */
+            background: radial-gradient(farthest-corner at top left, #002D40 20%, #0E7991 50%, #49CFE9 85%, #C7F6FF 100%);
+            background-attachment: fixed; /* Keeps the background in place on scroll */
+        }
+        .card {
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1)); /* Gradient for the glass effect */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* A subtle border to define the edge */
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            max-width: 60rem;
+            margin: 2rem auto;
+            position: relative; /* Needed to position the pseudo-element */
+            overflow: hidden; /* Keeps the effect contained within the card */
+        }
+        .primary-button {
+            background-color: #002D40;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .primary-button:hover {
+            background-color: #00405c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        /* Confetti Styles */
+        #confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            opacity: 0;
+            animation: fall 5s linear forwards;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotateZ(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotateZ(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="card text-center">
+        <div id="resultDescription" class="text-lg text-white mt-4 mb-6 text-left">
+            <!-- Results will be injected here by JavaScript -->
+        </div>
+        <a href="index.html" class="primary-button uppercase">Retake Quiz</a>
+    </div>
+
+    <div id="confetti-container"></div>
+
+    <script>
+        const resultDescription = document.getElementById('resultDescription');
+        const confettiContainer = document.getElementById('confetti-container');
+        const confettiColors = ['#49CFE9', '#FFC166', '#FF6363'];
+
+        const resultsText = {
+            talent: `
+                <p class="text-2xl font-bold mb-4 text-white">You're a Talent Architect</p>
+                <p>Your primary focus is on the systems, strategies, and actions that help people grow. You see your team as a dynamic engine, and you are constantly working to build a stronger bench, improve training, and maximize the potential of your people. Your superpower is building a foundation of excellence through your people.</p>
+                <p class="mt-2">Grab a bracelet and a challenge card matching your superpower!</p>
+                <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell-Leadership-Bracelet-3.png" alt="Leadership Bracelet" class="mx-auto mt-2 mb-6 rounded-lg">
+            `,
+            leadership: `
+                <p class="text-2xl font-bold mb-2 text-white">You're a Visionary Leader</p>
+                <p>Your primary focus is on guiding, influencing, and inspiring your team. You are a natural motivator who understands that performance is tied to purpose. You excel at coaching, delegating, and setting a clear path forward. Your superpower is empowering others to step into their greatness.</p>
+                <p class="mt-2">Grab a bracelet and a challenge card matching your superpower!</p>
+                <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell-Leadership-Bracelet-2.png" alt="Leadership Bracelet" class="mx-auto my-6 rounded-lg">
+            `,
+            culture: `
+                <p class="text-2xl font-bold mb-4 text-white">You're a Culture Curator</p>
+                <p>Your primary focus is on the emotional and social climate of your team. You are the heartbeat of the team, dedicated to ensuring that shared values, behaviors, and norms create an environment where everyone feels like they belong. You believe that a healthy, happy team is the key to success. Your superpower is creating an amazing place to work.</p>
+                <p class="mt-2">Grab a bracelet and a challenge card matching your superpower!</p>
+                <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell-Leadership-Bracelet-4.png" alt="Leadership Bracelet" class="mx-auto my-6 rounded-lg">
+            `
+        };
+
+        function calculateResults() {
+            const params = new URLSearchParams(window.location.search);
+            let scores = {
+                talent: 0,
+                leadership: 0,
+                culture: 0
+            };
+
+            for (let i = 1; i <= 10; i++) {
+                const answer = params.get(`q${i}`);
+                if (answer) {
+                    scores[answer]++;
+                }
+            }
+
+            let maxScore = 0;
+            let resultCategory = 'talent'; // Default result
+            for (const category in scores) {
+                if (scores[category] > maxScore) {
+                    maxScore = scores[category];
+                    resultCategory = category;
+                }
+            }
+            
+            resultDescription.innerHTML = resultsText[resultCategory];
+        }
+
+        function startConfetti() {
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                confetti.style.animationDelay = `${Math.random() * 3}s`;
+                confetti.style.animationDuration = `${2 + Math.random() * 3}s`;
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confettiContainer.appendChild(confetti);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            calculateResults();
+            startConfetti();
+        });
+    </script>
+
+</body>
+</html>
+
