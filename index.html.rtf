@@ -1,0 +1,277 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww7620\viewh10060\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>What's Your Leadership Superpower?</title>\
+    <link rel="preconnect" href="https://fonts.googleapis.com">\
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&family=IBM+Plex+Serif:wght@400;700&display=swap" rel="stylesheet">\
+    <script src="https://cdn.tailwindcss.com"></script>\
+    <style>\
+        body \{\
+            font-family: 'IBM Plex Sans', sans-serif;\
+            background-color: #002D40; /* Fallback color */\
+            background: radial-gradient(farthest-corner at top left, #002D40 20%, #0E7991 50%, #49CFE9 85%, #C7F6FF 100%);\
+            background-attachment: fixed; /* Keeps the background in place on scroll */\
+        \}\
+        .card \{\
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1)); /* Gradient for the glass effect */\
+            backdrop-filter: blur(10px);\
+            -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */\
+            border: 1px solid rgba(255, 255, 255, 0.2); /* A subtle border to define the edge */\
+            padding: 2.5rem;\
+            border-radius: 1.5rem;\
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);\
+            max-width: 60rem;\
+            margin: 2rem auto;\
+            position: relative; /* Needed to position the pseudo-element */\
+            overflow: hidden; /* Keeps the effect contained within the card */\
+        \}\
+        .card::before \{\
+            content: '';\
+            position: absolute;\
+            top: 0;\
+            left: 0;\
+            width: 100%;\
+            height: 100%;\
+            background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.6), transparent 40%);\
+            opacity: 0;\
+            transition: opacity 0.4s ease-in-out;\
+            z-index: 0;\
+        \}\
+        .card::after \{\
+            content: '';\
+            position: absolute;\
+            top: 0;\
+            left: 0;\
+            width: 200%;\
+            height: 100%;\
+            transform: translateX(-100%);\
+            background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.7) 50%, transparent 60%);\
+            animation: shimmer 2s forwards;\
+            animation-delay: 0.5s;\
+            z-index: 2;\
+            pointer-events: none;\
+        \}\
+        @keyframes shimmer \{ to \{ transform: translateX(100%); \} \}\
+        .card:hover::before \{ opacity: 1; \}\
+        .card > * \{ position: relative; z-index: 3; \}\
+        .card h1 + p \{ font-family: 'IBM Plex Serif', serif; \}\
+        @media (min-width: 640px) \{ .card \{ max-width: 60rem; \} \}\
+        .primary-button \{\
+            background-color: #002D40;\
+            color: white;\
+            padding: 0.75rem 1.5rem;\
+            border-radius: 9999px;\
+            font-weight: bold;\
+            transition: all 0.3s ease;\
+        \}\
+        .primary-button:hover \{\
+            background-color: #00405c;\
+            transform: translateY(-2px);\
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);\
+        \}\
+        input[type="radio"]:checked + label \{\
+            background-color: rgba(255, 255, 255, 0.9);\
+            border-color: white;\
+            color: #002D40;\
+        \}\
+        .question-option \{\
+            background-color: rgba(255, 255, 255, 0.1);\
+            border: 1px solid rgba(255, 255, 255, 0.3);\
+            border-radius: 0.75rem;\
+            padding: 1rem;\
+            cursor: pointer;\
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;\
+            color: white;\
+        \}\
+        .question-option:hover \{\
+            background-color: rgba(255, 255, 255, 0.7);\
+            color: #002D40;\
+        \}\
+        .error-text \{ color: #993B3B; \}\
+    </style>\
+</head>\
+<body class="p-4">\
+\
+    <div id="quizCard" class="card text-center">\
+        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2 uppercase">What's Your Leadership Superpower?</h1>\
+        <p id="subheader" class="text-lg text-white mb-8">Choose the answer that most resonates with you, even if it\'92s a tough choice!</p>\
+        \
+        <form id="quizForm" action="results.html" method="GET" class="text-left space-y-8">\
+            \
+            <!-- Question 1 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">1. A new Team Member joins your team. Your first instinct is to:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q1a" name="q1" value="talent" class="hidden">\
+                    <label for="q1a" class="question-option block">A) Immediately create a personalized training plan to help them master their role and grow their skills.</label>\
+                    <input type="radio" id="q1b" name="q1" value="leadership" class="hidden">\
+                    <label for="q1b" class="question-option block">B) Schedule a one-on-one chat to understand their personal goals and share your vision for the team's future.</label>\
+                    <input type="radio" id="q1c" name="q1" value="culture" class="hidden">\
+                    <label for="q1c" class="question-option block">C) Introduce them to the team with a big shout-out and share a fun story that embodies your team's spirit.</label>\
+                </div>\
+            </div>\
+\
+            <!-- Question 2 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">2. A key Team Member is accepted to TDP and will be leaving your Restaurant. Your immediate priority is to:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q2a" name="q2" value="talent" class="hidden">\
+                    <label for="q2a" class="question-option block">A) Review your succession plan and start interviewing candidates for the now-open role.</label>\
+                    <input type="radio" id="q2b" name="q2" value="leadership" class="hidden">\
+                    <label for="q2b" class="question-option block">B) Sit down with them to understand their goals and how you can best support them in the future.</label>\
+                    <input type="radio" id="q2c" name="q2" value="culture" class="hidden">\
+                    <label for="q2c" class="question-option block">C) Plan a special send-off to celebrate their contributions and show the team that you value everyone.</label>\
+                </div>\
+            </div>\
+\
+            <!-- Question 3 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">3. You're preparing for a team-wide meeting. You spend the most time on:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q3a" name="q3" value="leadership" class="hidden">\
+                    <label for="q3a" class="question-option block">A) Analyzing performance metrics and creating a clear action plan for improvement.</label>\
+                    <input type="radio" id="q3b" name="q3" value="leadership" class="hidden">\
+                    <label for="q3b" class="question-option block">B) Crafting a motivating speech that inspires the team to rally around a new goal.</label>\
+                    <input type="radio" id="q3c" name="q3" value="culture" class="hidden">\
+                    <label for="q3c" class="question-option block">C) Brainstorming a fun, engaging activity or icebreaker that will get everyone connected and laughing.</label>\
+                </div>\
+            </div>\
+\
+            <!-- Question 4 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">4. You're implementing new operational standards that will impact the team. You believe the best way to address it is by:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q4a" name="q4" value="talent" class="hidden">\
+                    <label for="q4a" class="question-option block">A) Implementing a new accountability system or performance management strategy.</label>\
+                    <input type="radio" id="q4b" name="q4" value="leadership" class="hidden">\
+                    <label for="q4b" class="question-option block">B) Having a direct conversation with key leaders to equip them the ability to lead the change.</label>\
+                    <input type="radio" id="q4c" name="q4" value="culture" class="hidden">\
+                    <label for="q4c" class="question-option block">C) Reinforcing positive behaviors publicly and organizing an event to reconnect the team to the new standards.</label>\
+                </div>\
+            </div>\
+\
+            <!-- Question 5 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">5. A client leaves a glowing review specifically mentioning a Team Member. You're most excited to:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q5a" name="q5" value="talent" class="hidden">\
+                    <label for="q5a" class="question-option block">A) Use the review as a teachable moment to show the entire team what great service looks like.</label>\
+                    <input type="radio" id="q5b" name="q5" value="leadership" class="hidden">\
+                    <label for="q5b" class="question-option block">B) Personally call out the Team Member and thank them for being a fantastic example of a leader.</label>\
+                    <input type="radio" id="q5c" name="q5" value="culture" class="hidden">\
+                    <label for="q5c" class="question-option block">C) Share the review with the entire team and celebrate their collective impact on the client experience.</label>\
+                </div>\
+            </div>\
+\
+            <!-- Question 6 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">6. When you think about your biggest win last quarter, it was likely related to:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q6a" name="q6" value="leadership" class="hidden">\
+                    <label for="q6a" class="question-option block">A) Exceeding a key performance indicator like speed or accuracy.</label>\
+                    <input type="radio" id="q6b" name="q6" value="talent" class="hidden">\
+                    <label for="q6b" class="question-option block">B) Successfully coaching a Team Member to take on a new leadership role.</label>\
+                    <input type="radio" id="q6c" name="q6" value="culture" class="hidden">\
+                    <label for="q6c" class="question-option block">C) Feeling the positive, energetic buzz of your team working together seamlessly.</label>\
+                </div>\
+            </div>\
+            \
+            <!-- Question 7 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">7. A new company initiative is announced. Your first thought is:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q7a" name="q7" value="talent" class="hidden">\
+                    <label for="q7a" class="question-option block">A) "How can I update our hiring and training systems to align with this?"</label>\
+                    <input type="radio" id="q7b" name="q7" value="leadership" class="hidden">\
+                    <label for="q7b" class="question-option block">B) "How can I communicate this in a way that gets my leaders and team excited about the change?"</label>\
+                    <input type="radio" id="q7c" name="q7" value="culture" class="hidden">\
+                    <label for="q7c" class="question-option block">C) "How does this fit with our team's unique identity and values?"</label>\
+                </div>\
+            </div>\
+\
+            <!-- Question 8 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">8. You're reviewing your schedule for the week. The most important block of time is set aside for:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q8a" name="q8" value="talent" class="hidden">\
+                    <label for="q8a" class="question-option block">A) Interviewing candidates, reviewing job applications, or conducting performance reviews.</label>\
+                    <input type="radio" id="q8b" name="q8" value="leadership" class="hidden">\
+                    <label for="q8b" class="question-option block">B) One-on-one meetings with your team leaders and key influencers.</label>\
+                    <input type="radio" id="q8c" name="q8" value="culture" class="hidden">\
+                    <label for="q8c" class="question-option block">C) Walking the floor, connecting with Team Members, and observing the team dynamic.</label>\
+                </div>\
+            </div>\
+\
+            <!-- Question 9 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">9. When faced with a complex operational challenge, your go-to solution is usually to:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q9a" name="q9" value="talent" class="hidden">\
+                    <label for="q9a" class="question-option block">A) Develop a new system or process to streamline the workflow and reduce errors.</label>\
+                    <input type="radio" id="q9b" name="q9" value="leadership" class="hidden">\
+                    <label for="q9b" class="question-option block">B) Delegate the problem to a trusted leader, empowering them to find a solution.</label>\
+                    <input type="radio" id="q9c" name="q9" value="culture" class="hidden">\
+                    <label for="q9c" class="question-option block">C) Gather the team together for a collaborative brainstorming session to get everyone's input.</label>\
+                </div>\
+            </div>\
+\
+            <!-- Question 10 -->\
+            <div>\
+                <p class="text-lg text-white mb-4 font-bold">10. You believe a truly great leader is someone who:</p>\
+                <div class="space-y-4">\
+                    <input type="radio" id="q10a" name="q10" value="talent" class="hidden">\
+                    <label for="q10a" class="question-option block">A) Builds a bench of highly skilled and productive Team Members.</label>\
+                    <input type="radio" id="q10b" name="q10" value="leadership" class="hidden">\
+                    <label for="q10b" class="question-option block">B) Inspires and motivates their team to achieve greatness.</label>\
+                    <input type="radio" id="q10c" name="q10" value="culture" class="hidden">\
+                    <label for="q10c" class="question-option block">C) Creates a positive and inclusive environment where everyone feels valued.</label>\
+                </div>\
+            </div>\
+\
+            <!-- Submit Button -->\
+            <div class="text-center pt-8">\
+                <p id="errorMessage" class="text-center error-text font-bold mb-4" style="display: none;">Please answer all questions to see your superpower!</p>\
+                <button type="submit" class="primary-button uppercase">Show My Superpower!</button>\
+            </div>\
+        </form>\
+    </div>\
+\
+    <script>\
+        const quizForm = document.getElementById('quizForm');\
+        const errorMessage = document.getElementById('errorMessage');\
+        const card = document.querySelector('.card');\
+\
+        // Mouse-following spotlight effect for the card\
+        card.addEventListener('mousemove', e => \{\
+            const rect = card.getBoundingClientRect();\
+            const x = e.clientX - rect.left;\
+            const y = e.clientY - rect.top;\
+            card.style.setProperty('--mouse-x', `$\{x\}px`);\
+            card.style.setProperty('--mouse-y', `$\{y\}px`);\
+        \});\
+\
+        quizForm.addEventListener('submit', function(event) \{\
+            const answeredQuestions = this.querySelectorAll('input[type="radio"]:checked');\
+            if (answeredQuestions.length < 10) \{\
+                event.preventDefault(); // Stop the form from submitting\
+                errorMessage.style.display = 'block';\
+            \} else \{\
+                errorMessage.style.display = 'none';\
+            \}\
+        \});\
+    </script>\
+\
+</body>\
+</html>\
+\
+}
