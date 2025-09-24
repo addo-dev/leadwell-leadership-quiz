@@ -14,20 +14,54 @@
             background-color: #002D40; /* Fallback color */
             background: radial-gradient(farthest-corner at top left, #002D40 20%, #0E7991 50%, #49CFE9 85%, #C7F6FF 100%);
             background-attachment: fixed; /* Keeps the background in place on scroll */
+            perspective: 1000px; /* For the 3D tilt effect */
         }
         .card {
-            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1)); /* Gradient for the glass effect */
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* A subtle border to define the edge */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 2.5rem;
             border-radius: 1.5rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             max-width: 60rem;
             margin: 2rem auto;
-            position: relative; /* Needed to position the pseudo-element */
-            overflow: hidden; /* Keeps the effect contained within the card */
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.1s linear;
         }
+        .card::before, .card::after { /* Aurora Effect Layer 1 & 2 */
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            transform-origin: center center;
+            z-index: 0;
+            filter: blur(80px); /* This blurs the edges for a soft gradient effect */
+            opacity: 0.9;
+        }
+        .card::before {
+            background: radial-gradient(circle, rgba(73, 207, 233, 0.6) 0%, rgba(14, 121, 145, 0.3) 50%, transparent 80%);
+            animation: aurora-flow-1 25s linear infinite;
+        }
+        .card::after {
+            background: radial-gradient(circle, rgba(199, 246, 255, 0.5) 0%, rgba(73, 207, 233, 0.2) 60%, transparent 85%);
+            animation: aurora-flow-2 20s linear infinite;
+        }
+        @keyframes aurora-flow-1 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(10%); }
+            50% { transform: translate(-50%, -50%) rotate(180deg) translateX(-10%); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(10%); }
+        }
+        @keyframes aurora-flow-2 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(-15%); }
+            50% { transform: translate(-50%, -50%) rotate(-180deg) translateX(15%); }
+            100% { transform: translate(-50%, -50%) rotate(-360deg) translateX(-15%); }
+        }
+        .card > * { position: relative; z-index: 3; }
         .primary-button {
             background-color: #002D40;
             color: white;
@@ -69,7 +103,11 @@
 </head>
 <body class="p-4">
 
-    <div class="card text-center">
+    <div class="mx-auto" style="max-width: 60rem;">
+        <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell_Logo_Cyan_Reverse.png" alt="Leadwell Logo" class="w-32">
+    </div>
+
+    <div id="resultsCard" class="card text-center">
         <div id="resultDescription" class="text-lg text-white mt-4 mb-6 text-left">
             <!-- Results will be injected here by JavaScript -->
         </div>
@@ -81,6 +119,7 @@
     <script>
         const resultDescription = document.getElementById('resultDescription');
         const confettiContainer = document.getElementById('confetti-container');
+        const card = document.getElementById('resultsCard');
         const confettiColors = ['#49CFE9', '#FFC166', '#FF6363'];
 
         const resultsText = {
@@ -111,11 +150,13 @@
                 leadership: 0,
                 culture: 0
             };
-
+            
+            const answers = {};
             for (let i = 1; i <= 10; i++) {
                 const answer = params.get(`q${i}`);
                 if (answer) {
                     scores[answer]++;
+                    answers[`q${i}`] = answer;
                 }
             }
 
@@ -129,6 +170,29 @@
             }
             
             resultDescription.innerHTML = resultsText[resultCategory];
+            answers.superpower = resultCategory;
+            
+            // --- Send data to Google Sheet ---
+            sendDataToSheet(answers);
+        }
+
+        async function sendDataToSheet(data) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybT9Cpiwc57nfIr9lHQy5BlUaymuI21HESta8gXEwIeUVLLJRf5Mif0QyIgmCZ63rH3Q/exec";
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Changed to no-cors to avoid preflight issues
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=UTF-8',
+                    },
+                    body: JSON.stringify(data),
+                    redirect: 'follow'
+                });
+            } catch (error) {
+                console.error('Error submitting to Google Sheet:', error);
+            }
         }
 
         function startConfetti() {
@@ -143,6 +207,18 @@
                 confettiContainer.appendChild(confetti);
             }
         }
+        
+        // --- Gyroscope Tilt Effect ---
+        const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile() && window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', (event) => {
+                const { beta, gamma } = event;
+                const maxTilt = 8;
+                const tiltY = (gamma / 90) * maxTilt;
+                const tiltX = (beta / 180) * maxTilt * -1;
+                card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+            });
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             calculateResults();
@@ -152,4 +228,6 @@
 
 </body>
 </html>
+
+
 
