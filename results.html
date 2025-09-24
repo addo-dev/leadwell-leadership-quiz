@@ -112,7 +112,7 @@
 
     <div id="confetti-container"></div>
     <!-- Hidden iframe for form submission -->
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){console.log('Successfully submitted to Google Sheet.');}"></iframe>
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
     <script>
         // Make sure this URL matches the one from your LATEST deployment
@@ -219,6 +219,13 @@
         window.addEventListener('DOMContentLoaded', () => {
             calculateResults();
             startConfetti();
+
+            // Attach the iframe onload event listener here
+            document.getElementById('hidden_iframe').onload = () => {
+                if(submitted){
+                    console.log('Successfully submitted to Google Sheet.');
+                }
+            };
 
             if (window.DeviceOrientationEvent && 'ontouchstart' in window) {
                 window.addEventListener('deviceorientation', handleOrientation);
