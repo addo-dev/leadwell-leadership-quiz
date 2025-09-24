@@ -180,18 +180,29 @@
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybT9Cpiwc57nfIr9lHQy5BlUaymuI21HESta8gXEwIeUVLLJRf5Mif0QyIgmCZ63rH3Q/exec";
             
             try {
+                // CORRECTED: mode is now 'cors' and Content-Type is 'application/json'
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Changed to no-cors to avoid preflight issues
+                    mode: 'cors', 
                     cache: 'no-cache',
                     headers: {
-                        'Content-Type': 'text/plain;charset=UTF-8',
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data),
-                    redirect: 'follow'
                 });
+                
+                // Now we can see the actual response from your script!
+                const result = await response.json();
+                if (result.result === 'success') {
+                    console.log("Successfully submitted to Google Sheet.");
+                } else {
+                    // This will log the actual error message from your script
+                    console.error('Error from Google Script:', result.error);
+                }
+
             } catch (error) {
-                console.error('Error submitting to Google Sheet:', error);
+                // This will catch network errors (like if the URL itself is wrong)
+                console.error('Network error submitting to Google Sheet:', error);
             }
         }
 
