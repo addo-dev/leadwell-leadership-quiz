@@ -156,15 +156,17 @@
             form.action = SCRIPT_URL;
             form.target = 'hidden_iframe';
 
-            const dataAsForm = new URLSearchParams(data).toString();
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'data';
-            input.value = dataAsForm;
-            form.appendChild(input);
+            // Create a separate hidden input for each key-value pair
+            for (const key in data) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = data[key];
+                form.appendChild(input);
+            }
 
             document.body.appendChild(form);
-            submitted = true; // Set flag before submitting
+            submitted = true;
             form.submit();
             console.log("Submitting data via hidden form:", data);
             document.body.removeChild(form);
@@ -226,7 +228,6 @@
             calculateResults();
             startConfetti();
 
-            // Attach the iframe onload event listener here
             document.getElementById('hidden_iframe').onload = () => {
                 if(submitted){
                     console.log('Successfully submitted to Google Sheet.');
