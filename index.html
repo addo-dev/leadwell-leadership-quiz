@@ -14,51 +14,55 @@
             background-color: #002D40; /* Fallback color */
             background: radial-gradient(farthest-corner at top left, #002D40 20%, #0E7991 50%, #49CFE9 85%, #C7F6FF 100%);
             background-attachment: fixed; /* Keeps the background in place on scroll */
+            perspective: 1000px; /* For the 3D tilt effect */
         }
         .card {
-            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1)); /* Gradient for the glass effect */
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05)); /* More transparent for aurora */
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* A subtle border to define the edge */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 2.5rem;
             border-radius: 1.5rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             max-width: 60rem;
             margin: 2rem auto;
-            position: relative; /* Needed to position the pseudo-element */
-            overflow: hidden; /* Keeps the effect contained within the card */
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d; /* For the 3D tilt effect */
+            transition: transform 0.1s linear; /* Smooths out the tilt */
+        }
+        .card::before, .card::after { /* Aurora Effect Layer 1 & 2 */
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            transform-origin: center center;
+            z-index: 0;
+            filter: blur(80px); /* This blurs the edges for a soft gradient effect */
+            opacity: 0.9;
         }
         .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.6), transparent 40%);
-            opacity: 0;
-            transition: opacity 0.4s ease-in-out;
-            z-index: 0;
+            background: radial-gradient(circle, rgba(73, 207, 233, 0.6) 0%, rgba(14, 121, 145, 0.3) 50%, transparent 80%);
+            animation: aurora-flow-1 25s linear infinite;
         }
         .card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 200%;
-            height: 100%;
-            transform: translateX(-100%);
-            background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.7) 50%, transparent 60%);
-            animation: shimmer 2s forwards;
-            animation-delay: 0.5s;
-            z-index: 2;
-            pointer-events: none;
+            background: radial-gradient(circle, rgba(199, 246, 255, 0.5) 0%, rgba(73, 207, 233, 0.2) 60%, transparent 85%);
+            animation: aurora-flow-2 20s linear infinite;
         }
-        @keyframes shimmer { to { transform: translateX(100%); } }
-        .card:hover::before { opacity: 1; }
+        @keyframes aurora-flow-1 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(10%); }
+            50% { transform: translate(-50%, -50%) rotate(180deg) translateX(-10%); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(10%); }
+        }
+        @keyframes aurora-flow-2 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(-15%); }
+            50% { transform: translate(-50%, -50%) rotate(-180deg) translateX(15%); }
+            100% { transform: translate(-50%, -50%) rotate(-360deg) translateX(-15%); }
+        }
         .card > * { position: relative; z-index: 3; }
         .card h1 + p { font-family: 'IBM Plex Serif', serif; }
-        @media (min-width: 640px) { .card { max-width: 60rem; } }
         .primary-button {
             background-color: #002D40;
             color: white;
@@ -85,15 +89,34 @@
             cursor: pointer;
             transition: background-color 0.2s, border-color 0.2s, color 0.2s;
             color: white;
+            position: relative;
+            overflow: hidden;
         }
         .question-option:hover {
             background-color: rgba(255, 255, 255, 0.7);
             color: #002D40;
         }
-        .error-text { color: #993B3B; }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+        }
+        @keyframes ripple-effect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        .error-text { color: #FF6363; }
     </style>
 </head>
 <body class="p-4">
+
+    <div class="mx-auto" style="max-width: 60rem;">
+        <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell_Logo_Cyan_Reverse.png" alt="Leadwell Logo" class="w-32">
+    </div>
 
     <div id="quizCard" class="card text-center">
         <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2 uppercase">What's Your Leadership Superpower?</h1>
@@ -116,13 +139,13 @@
 
             <!-- Question 2 -->
             <div>
-                <p class="text-lg text-white mb-4 font-bold">2. A key Team Member is accepted to TDP and will be leaving your Restaurant. Your immediate priority is to:</p>
+                <p class="text-lg text-white mb-4 font-bold">2. A key Team Member is launching into another opportunity and will be leaving your Restaurant. Your immediate priority is to:</p>
                 <div class="space-y-4">
                     <input type="radio" id="q2a" name="q2" value="talent" class="hidden">
                     <label for="q2a" class="question-option block">A) Review your succession plan and start interviewing candidates for the now-open role.</label>
-                    <input type="radio" id="q2b" name="q2" value="leadership" class="hidden">
+                    <input type="radio" id="q2b" name="q2" value="culture" class="hidden">
                     <label for="q2b" class="question-option block">B) Sit down with them to understand their goals and how you can best support them in the future.</label>
-                    <input type="radio" id="q2c" name="q2" value="culture" class="hidden">
+                    <input type="radio" id="q2c" name="q2" value="leadership" class="hidden">
                     <label for="q2c" class="question-option block">C) Plan a special send-off to celebrate their contributions and show the team that you value everyone.</label>
                 </div>
             </div>
@@ -131,7 +154,7 @@
             <div>
                 <p class="text-lg text-white mb-4 font-bold">3. You're preparing for a team-wide meeting. You spend the most time on:</p>
                 <div class="space-y-4">
-                    <input type="radio" id="q3a" name="q3" value="leadership" class="hidden">
+                    <input type="radio" id="q3a" name="q3" value="talent" class="hidden">
                     <label for="q3a" class="question-option block">A) Analyzing performance metrics and creating a clear action plan for improvement.</label>
                     <input type="radio" id="q3b" name="q3" value="leadership" class="hidden">
                     <label for="q3b" class="question-option block">B) Crafting a motivating speech that inspires the team to rally around a new goal.</label>
@@ -155,14 +178,14 @@
 
             <!-- Question 5 -->
             <div>
-                <p class="text-lg text-white mb-4 font-bold">5. A client leaves a glowing review specifically mentioning a Team Member. You're most excited to:</p>
+                <p class="text-lg text-white mb-4 font-bold">5. A customer leaves a glowing review specifically mentioning a Team Member. You're most excited to:</p>
                 <div class="space-y-4">
                     <input type="radio" id="q5a" name="q5" value="talent" class="hidden">
                     <label for="q5a" class="question-option block">A) Use the review as a teachable moment to show the entire team what great service looks like.</label>
                     <input type="radio" id="q5b" name="q5" value="leadership" class="hidden">
                     <label for="q5b" class="question-option block">B) Personally call out the Team Member and thank them for being a fantastic example of a leader.</label>
                     <input type="radio" id="q5c" name="q5" value="culture" class="hidden">
-                    <label for="q5c" class="question-option block">C) Share the review with the entire team and celebrate their collective impact on the client experience.</label>
+                    <label for="q5c" class="question-option block">C) Share the review with the entire team and celebrate their collective impact on the customer experience.</label>
                 </div>
             </div>
 
@@ -181,7 +204,7 @@
             
             <!-- Question 7 -->
             <div>
-                <p class="text-lg text-white mb-4 font-bold">7. A new company initiative is announced. Your first thought is:</p>
+                <p class="text-lg text-white mb-4 font-bold">7. You are considering an idea from a director to build out a leadership development program. Your first thought is:</p>
                 <div class="space-y-4">
                     <input type="radio" id="q7a" name="q7" value="talent" class="hidden">
                     <label for="q7a" class="question-option block">A) "How can I update our hiring and training systems to align with this?"</label>
@@ -198,9 +221,9 @@
                 <div class="space-y-4">
                     <input type="radio" id="q8a" name="q8" value="talent" class="hidden">
                     <label for="q8a" class="question-option block">A) Interviewing candidates, reviewing job applications, or conducting performance reviews.</label>
-                    <input type="radio" id="q8b" name="q8" value="leadership" class="hidden">
+                    <input type="radio" id="q8b" name="q8" value="culture" class="hidden">
                     <label for="q8b" class="question-option block">B) One-on-one meetings with your team leaders and key influencers.</label>
-                    <input type="radio" id="q8c" name="q8" value="culture" class="hidden">
+                    <input type="radio" id="q8c" name="q8" value="leadership" class="hidden">
                     <label for="q8c" class="question-option block">C) Walking the floor, connecting with Team Members, and observing the team dynamic.</label>
                 </div>
             </div>
@@ -211,9 +234,9 @@
                 <div class="space-y-4">
                     <input type="radio" id="q9a" name="q9" value="talent" class="hidden">
                     <label for="q9a" class="question-option block">A) Develop a new system or process to streamline the workflow and reduce errors.</label>
-                    <input type="radio" id="q9b" name="q9" value="leadership" class="hidden">
+                    <input type="radio" id="q9b" name="q9" value="culture" class="hidden">
                     <label for="q9b" class="question-option block">B) Delegate the problem to a trusted leader, empowering them to find a solution.</label>
-                    <input type="radio" id="q9c" name="q9" value="culture" class="hidden">
+                    <input type="radio" id="q9c" name="q9" value="leadership" class="hidden">
                     <label for="q9c" class="question-option block">C) Gather the team together for a collaborative brainstorming session to get everyone's input.</label>
                 </div>
             </div>
@@ -242,17 +265,9 @@
     <script>
         const quizForm = document.getElementById('quizForm');
         const errorMessage = document.getElementById('errorMessage');
-        const card = document.querySelector('.card');
+        const card = document.getElementById('quizCard');
 
-        // Mouse-following spotlight effect for the card
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
-        });
-
+        // --- Form Validation ---
         quizForm.addEventListener('submit', function(event) {
             const answeredQuestions = this.querySelectorAll('input[type="radio"]:checked');
             if (answeredQuestions.length < 10) {
@@ -262,8 +277,48 @@
                 errorMessage.style.display = 'none';
             }
         });
+
+        // --- Tap Ripple Effect ---
+        document.querySelectorAll('.question-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = `${size}px`;
+                
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                ripple.addEventListener('animationend', () => {
+                    ripple.remove();
+                });
+            });
+        });
+
+        // --- Gyroscope Tilt Effect ---
+        const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile() && window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', (event) => {
+                const { beta, gamma } = event; // beta: front-back tilt, gamma: left-right tilt
+                const maxTilt = 8;
+                
+                // We use gamma for Y-axis rotation and beta for X-axis rotation
+                const tiltY = (gamma / 90) * maxTilt; 
+                const tiltX = (beta / 180) * maxTilt * -1; // Invert and reduce sensitivity
+
+                card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+            });
+        }
     </script>
 
 </body>
 </html>
+
+
 
