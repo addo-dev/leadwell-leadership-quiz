@@ -109,7 +109,8 @@
 </head>
 <body class="p-4">
     <div class="mx-auto content-layer" style="max-width: 60rem;">
-        <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell_Logo_Cyan_Reverse.png" alt="Leadwell Logo" class="w-48 mb-6">
+        <!-- Added an onerror handler to the logo for robustness -->
+        <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell_Logo_Cyan_Reverse.png" alt="Leadwell Logo" class="w-48 mb-6" onerror="this.onerror=null;this.src='https://placehold.co/192x48/002D40/FFFFFF?text=Leadwell';">
     </div>
     <div class="card text-center content-layer">
         <div id="resultDescription" class="text-lg text-white mt-4 mb-6 text-left">
@@ -130,24 +131,25 @@
         const confettiColors = ['#49CFE9', '#FFC166', '#FF6363'];
         let submitted = false;
 
+        // Added onerror handlers to the images below to provide fallbacks
         const resultsText = {
             talent: `
                 <p class="text-2xl font-bold mb-4 text-white">You're a Talent Architect</p>
                 <p>Your primary focus is on the systems, strategies, and actions that help people grow. You see your team as a dynamic engine, and you are constantly working to build a stronger bench, improve training, and maximize the potential of your people. Your superpower is building a foundation of excellence through your people.</p>
-                <p class="mt-2">Grab a bracelet and a challenge card matching your superpower!</p>
-                <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell-Leadership-Bracelet-3.png" alt="Leadership Bracelet" class="mx-auto mt-2 mb-6 rounded-lg">
+                <p class="mt-2">Grab a resource and a challenge card matching your superpower.</p>
+                
             `,
             leadership: `
                 <p class="text-2xl font-bold mb-2 text-white">You're a Visionary Leader</p>
                 <p>Your primary focus is on guiding, influencing, and inspiring your team. You are a natural motivator who understands that performance is tied to purpose. You excel at coaching, delegating, and setting a clear path forward. Your superpower is empowering others to step into their greatness.</p>
-                <p class="mt-2">Grab a bracelet and a challenge card matching your superpower!</p>
-                <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell-Leadership-Bracelet-2.png" alt="Leadership Bracelet" class="mx-auto my-6 rounded-lg">
+                <p class="mt-2">Grab a resource and a challenge card matching your superpower.</p>
+                
             `,
             culture: `
                 <p class="text-2xl font-bold mb-4 text-white">You're a Culture Curator</p>
                 <p>Your primary focus is on the emotional and social climate of your team. You are the heartbeat of the team, dedicated to ensuring that shared values, behaviors, and norms create an environment where everyone feels like they belong. You believe that a healthy, happy team is the key to success. Your superpower is creating an amazing place to work.</p>
-                <p class="mt-2">Grab a bracelet and a challenge card matching your superpower!</p>
-                <img src="https://devleadwell.wpenginepowered.com/wp-content/uploads/2025/09/Leadwell-Leadership-Bracelet-4.png" alt="Leadership Bracelet" class="mx-auto my-6 rounded-lg">
+                <p class="mt-2">Grab a resource and a challenge card matching your superpower.</p>
+                
             `
         };
 
@@ -243,4 +245,3 @@
 
 </body>
 </html>
-
